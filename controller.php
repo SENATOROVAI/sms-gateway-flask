@@ -1,5 +1,6 @@
-<?php include "model.php"; ?>
-
+<?php 
+include "model.php";
+    
 // Function to send SMS using Gammu and a specified modem
 function sendSMS($modemPort, $phoneNumber, $message)
 {
