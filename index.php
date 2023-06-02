@@ -7,7 +7,7 @@
 <body>
     <h1>Отправка SMS</h1>
 
-    <form id="smsForm" action="send_sms.php">
+    <form id="smsForm" action="send_sms.php" method="POST">
         <label>Введите текст сообщения:</label><br>
         <textarea name="message" rows="4" cols="50"></textarea><br><br>
 
