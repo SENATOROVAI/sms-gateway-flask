@@ -1,6 +1,3 @@
-<?php
-
-<!-- HTML form -->
 <!DOCTYPE html>
 <html>
 <head>
