@@ -57,4 +57,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit;
 }
 
+// Функция для отправки SMS через Gammu
+function sendSMSWithGammu($port, $phoneNumber, $message) {
+    $command = "gammu-smsd-inject TEXT $phoneNumber -text \"$message\" -unicode -device $port";
+    exec($command, $output, $returnVar);
+
+    if ($returnVar === 0) {
+        return "SMS отправлено успешно";
+    } else {
+        return "Ошибка при отправке SMS";
+    }
+}
+
 ?>
