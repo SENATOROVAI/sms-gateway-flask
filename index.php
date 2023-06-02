@@ -9,7 +9,7 @@
 <body>
     <h1>Send SMS</h1>
 
-    <form method="POST">
+    <form method="POST" action="controller.php">
         <label>Enter recipient phone numbers (one number per line):</label><br>
         <textarea name="phone_numbers" rows="4" cols="50"></textarea><br><br>
 
