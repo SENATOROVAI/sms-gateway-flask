@@ -1,3 +1,5 @@
+<?php include "controller.php"; ?>
+
 <!DOCTYPE html>
 <html>
 <head>
