@@ -1,78 +1,70 @@
+<?php
+// Function to send SMS using Gammu and a specified modem
+function sendSMS($modemPort, $phoneNumber, $message)
+{
+    // Escape special characters in the phone number and message
+    $phoneNumber = escapeshellarg($phoneNumber);
+    $message = escapeshellarg($message);
+
+    // Run the Gammu command to send SMS using the specified modem
+    $command = "C:\Gammu\bin\gammu.exe -c gammurc sendsms TEXT {$phoneNumber} -text {$message}";
+    exec($command, $output, $returnVar);
+
+    if ($returnVar === 0) {
+        return "SMS sent successfully";
+    } else {
+        return "Failed to send SMS";
+    }
+}
+
+// Check if the form was submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the phone numbers and message from the form
+    $phoneNumbers = explode("\n", $_POST['phone_numbers']);
+    $message = $_POST['message'];
+
+    // Remove any empty phone numbers
+    $phoneNumbers = array_filter($phoneNumbers, function ($number) {
+        return !empty(trim($number));
+    });
+
+    // Specify the list of modem ports
+    $modemPorts = [
+        "COM17",
+        "COM2",
+        // Add the rest of the modem ports here
+    ];
+
+    // Send SMS to each phone number using each modem
+    foreach ($phoneNumbers as $phoneNumber) {
+        $phoneNumber = trim($phoneNumber);
+
+        foreach ($modemPorts as $modemPort) {
+            $response = sendSMS($modemPort, $phoneNumber, $message);
+            echo "<p>Sending SMS to {$phoneNumber} using {$modemPort}: {$response}</p>";
+        }
+    }
+}
+?>
+
+<!-- HTML form -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Отправка SMS</title>
+    <title>Send SMS</title>
     <meta charset="utf-8">
 </head>
 <body>
-    <h1>Отправка SMS</h1>
+    <h1>Send SMS</h1>
 
-    <form id="smsForm" action="send_sms.php" method="POST">
-        <label>Введите текст сообщения:</label><br>
-        <textarea name="message" rows="4" cols="50"></textarea><br><br>
-
-        <label>Выберите порт модема:</label><br>
-    <?php for ($i = 0; $i < 10; $i++) : ?>
-        <select name="modem_port[]">
-            <option value="">Выберите порт</option>
-            <option value="COM1">COM1</option>
-            <option value="COM17">COM17</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-            <option value="COM1">COM1</option>
-        </select>
-
-        <select name="modem_status[]">
-            <option value="enabled">Включен</option>
-            <option value="disabled">Выключен</option>
-        </select>
-        <br><br>
-    <?php endfor; ?>
-
-        // Отображение выбора порта модема для каждого модема
-        foreach ($modemPorts as $index => $port) {
-            echo "<label>Выберите порт модема для модема " . ($index + 1) . ":</label><br>";
-            echo "<input type=\"hidden\" name=\"modem_port[]\" value=\"$port\">";
-            echo "<select name=\"modem_status[]\">";
-            echo "<option value=\"enabled\">Включен</option>";
-            echo "<option value=\"disabled\">Выключен</option>";
-            echo "</select><br><br>";
-        }
-        ?>
-
-        <label>Введите номера получателей (каждый номер с новой строки):</label><br>
+    <form method="POST">
+        <label>Enter recipient phone numbers (one number per line):</label><br>
         <textarea name="phone_numbers" rows="4" cols="50"></textarea><br><br>
 
-        <input type="submit" value="Отправить">
+        <label>Enter message:</label><br>
+        <textarea name="message" rows="4" cols="50"></textarea><br><br>
+
+        <input type="submit" value="Send">
     </form>
-
-    <div id="response"></div>
-
-<!--     <script>
-        document.getElementById('smsForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            var form = event.target;
-            var formData = new FormData(form);
-            var xhr = new XMLHttpRequest();
-            
-            xhr.open('POST', 'send_sms.php', true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = xhr.responseText;
-                    document.getElementById('response').innerHTML = response;
-                } else {
-                    alert('Произошла ошибка при отправке запроса.');
-                }
-            };
-            
-            xhr.send(formData);
-        });
-    </script> -->
 </body>
 </html>
