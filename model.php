@@ -1,4 +1,4 @@
-<?php include "controller.php"; ?>
+<?php 
 // Подключение к базе данных
 $host = "localhost";
 $username = "root";
