@@ -1,50 +1,61 @@
 <?php 
 include "model.php";
-    
-// Function to send SMS using Gammu and a specified modem
-function sendSMS($modemPort, $phoneNumber, $message)
-{
-    // Escape special characters in the phone number and message
-    $phoneNumber = escapeshellarg($phoneNumber);
-    $message = escapeshellarg($message);
 
-    // Run the Gammu command to send SMS using the specified modem
-    $command = "C:\Gammu\bin\gammu.exe -c gammurc sendsms TEXT {$phoneNumber} -text {$message}";
-    exec($command, $output, $returnVar);
+// Обработка данных из формы
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $message = $_POST["message"];
+    $modemPorts = $_POST["modem_port"];
+    $modemStatuses = $_POST["modem_status"];
+    $phoneNumbers = explode("\n", $_POST["phone_numbers"]);
 
-    if ($returnVar === 0) {
-        return "SMS sent successfully";
-    } else {
-        return "Failed to send SMS";
+    // Проверка наличия текста сообщения
+    if (empty($message)) {
+        echo "Введите текст сообщения";
+        exit;
     }
-}
 
-// Check if the form was submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the phone numbers and message from the form
-    $phoneNumbers = explode("\n", $_POST['phone_numbers']);
-    $message = $_POST['message'];
+    // Проверка наличия номеров получателей
+    if (empty($phoneNumbers)) {
+        echo "Введите хотя бы один номер получателя";
+        exit;
+    }
 
-    // Remove any empty phone numbers
-    $phoneNumbers = array_filter($phoneNumbers, function ($number) {
-        return !empty(trim($number));
-    });
+    // Отправка SMS для каждого модема
+    for ($i = 0; $i < count($modemPorts); $i++) {
+        $modemPort = $modemPorts[$i];
+        $modemStatus = $modemStatuses[$i];
 
-    // Specify the list of modem ports
-    $modemPorts = [
-        "COM17",
-        "COM2",
-        // Add the rest of the modem ports here
-    ];
+        // Проверка статуса модема
+        if ($modemStatus !== "enabled") {
+            continue; // Пропуск итерации, если модем выключен
+        }
 
-    // Send SMS to each phone number using each modem
-    foreach ($phoneNumbers as $phoneNumber) {
-        $phoneNumber = trim($phoneNumber);
+        // Проверка наличия порта модема
+        if (empty($modemPort)) {
+            continue; // Пропуск итерации, если порт модема не выбран
+        }
 
-        foreach ($modemPorts as $modemPort) {
-            $response = sendSMS($modemPort, $phoneNumber, $message);
-            echo "<p>Sending SMS to {$phoneNumber} using {$modemPort}: {$response}</p>";
+        // Обработка каждого номера получателя
+        foreach ($phoneNumbers as $phoneNumber) {
+            $phoneNumber = trim($phoneNumber);
+
+            // Проверка наличия номера получателя
+            if (empty($phoneNumber)) {
+                continue; // Пропуск итерации, если номер получателя пустой
+            }
+
+            // Отправка SMS через Gammu
+            $response = sendSMSWithGammu($modemPort, $phoneNumber, $message);
+            echo "<p>Отправка сообщения на номер $phoneNumber через модем $modemPort: $response</p>";
+
+            // Сохранение информации о сообщении в базе данных
+            saveMessage($modemPort, $phoneNumber, $message);
         }
     }
+} else {
+    echo "Неверный метод запроса";
+    exit;
 }
+?>
+
 ?>
