@@ -7,7 +7,7 @@
 <body>
     <h1>Отправка SMS</h1>
 
-    <form id="smsForm">
+    <form id="smsForm" action="send_sms.php" method="POST">
         <label>Введите текст сообщения:</label><br>
         <textarea name="message" rows="4" cols="50"></textarea><br><br>
 
@@ -53,7 +53,7 @@
 
     <div id="response"></div>
 
-    <script>
+<!--     <script>
         document.getElementById('smsForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -73,6 +73,6 @@
             
             xhr.send(formData);
         });
-    </script>
+    </script> -->
 </body>
 </html>
