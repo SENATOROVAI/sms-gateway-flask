@@ -19,6 +19,6 @@ function saveMessage($modemPort, $phoneNumber, $message) {
 
     $sql = "INSERT INTO messages (modem_port, phone_number, message) VALUES (?, ?, ?);
     $statement = $mysqli->prepare($sql);
-    $statement->bind_param("sss", $modemPort, $phoneNumber, $message);
+    $statement->bind_param($modemPort, $phoneNumber, $message);
     $statement->execute();
 }
