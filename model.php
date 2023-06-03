@@ -17,8 +17,10 @@ if ($mysqli->connect_error) {
 function saveMessage($modemPort, $phoneNumber, $message) {
     global $mysqli;
 
-    $sql = "INSERT INTO messages (modem_port, phone_number, message) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO messages (modem_port, phone_number, message) VALUES (:modem_port, :phone_number, :message)";
     $statement = $mysqli->prepare($sql);
-    $statement->bind_param($modemPort, $phoneNumber, $message);
+    $statement->bindParam(':modem_port', $modem_port);
+    $statement->bindParam(':phone_number', $phone_number);
+    $statement->bindParam(':message', $message);
     $statement->execute();
 }
