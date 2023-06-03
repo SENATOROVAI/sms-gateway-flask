@@ -1,3 +1,5 @@
+<?php include "controller.php"; ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +22,7 @@
             </tr>
         <?php endforeach; ?>
     </table>
-    <form method="POST" action="controller.php">
+    <form method="POST">
         <label>Enter recipient phone numbers (one number per line):</label><br>
         <textarea name="phone_numbers" rows="4" cols="50"></textarea><br><br>
 
