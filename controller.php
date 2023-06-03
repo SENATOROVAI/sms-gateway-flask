@@ -2,8 +2,8 @@
 include "model.php";
 
 
-$phoneNumbers = array_filter(array_map('trim', explode("\n", $_POST['phone_numbers'])));
-$message = $_POST['message'];
+$phoneNumbers = array_filter(array_map('trim', explode("\n", @$_POST['phone_numbers'])));
+$message = @$_POST['message'];
 
 // Array to store delivery results
 $deliveryResults = [];
@@ -27,7 +27,7 @@ $modemPorts = [
 ];
 
 
-if ($_POST['message'] || $_POST['phone_numbers']) {
+if (@$_POST['message'] || @$_POST['phone_numbers']) {
     // Get the phone numbers and message from the form
 
     // Send SMS to each phone number using each modem
