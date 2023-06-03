@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "model.php";
 
 // Обработка данных из формы
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 // Функция для отправки SMS через Gammu
 function sendSMSWithGammu($port, $phoneNumber, $message) {
-    $command = "gammu-smsd-inject TEXT $phoneNumber -text \"$message\" -unicode -device $port";
+    $command = "gammu-smsd-inject TEXT $phoneNumber -text \"$message\" -unicode -device \"$port\"";
     exec($command, $output, $returnVar);
 
     if ($returnVar === 0) {
@@ -68,5 +68,4 @@ function sendSMSWithGammu($port, $phoneNumber, $message) {
         return "Ошибка при отправке SMS";
     }
 }
-
 ?>
