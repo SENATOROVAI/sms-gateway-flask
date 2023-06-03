@@ -12,6 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check account balance and display it in the footer
     $accountBalance = checkBalance();
     echo "<p>{$accountBalance}</p>";
+    
+    // Specify the list of modem ports
+$modemPorts = [
+    "COM17",
+    "COM11",
+    "COM13",
+    "COM14",
+    "COM15",
+    "COM17",
+    "COM17",
+    "COM17",
+    "COM25",
+    // Add the rest of the modem ports here
+];
 
     // Send SMS to each phone number using each modem
     foreach ($phoneNumbers as $phoneNumber) {
@@ -79,20 +93,6 @@ function checkBalance()
 
     return ($returnVar === 0) ? implode("\n", $output) : "Failed to check account balance";
 }
-
-// Specify the list of modem ports
-$modemPorts = [
-    "COM17",
-    "COM11",
-    "COM13",
-    "COM14",
-    "COM15",
-    "COM17",
-    "COM17",
-    "COM17",
-    "COM25",
-    // Add the rest of the modem ports here
-];
 
 // Check modem status
 $modemStatuses = [];
