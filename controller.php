@@ -1,19 +1,18 @@
 <?php
 include "model.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the phone numbers and message from the form
-    $phoneNumbers = array_filter(array_map('trim', explode("\n", $_POST['phone_numbers'])));
-    $message = $_POST['message'];
 
-    // Array to store delivery results
-    $deliveryResults = [];
+$phoneNumbers = array_filter(array_map('trim', explode("\n", $_POST['phone_numbers'])));
+$message = $_POST['message'];
 
-    // Check account balance and display it in the footer
-    $accountBalance = checkBalance();
-    echo "<p>{$accountBalance}</p>";
-    
-    // Specify the list of modem ports
+// Array to store delivery results
+$deliveryResults = [];
+
+// Check account balance and display it in the footer
+$accountBalance = checkBalance();
+echo "<p>{$accountBalance}</p>";
+
+// Specify the list of modem ports
 $modemPorts = [
     "COM17",
     "COM11",
@@ -26,6 +25,10 @@ $modemPorts = [
     "COM25",
     // Add the rest of the modem ports here
 ];
+
+
+if ($_POST['message'] || $_POST['phone_numbers']) {
+    // Get the phone numbers and message from the form
 
     // Send SMS to each phone number using each modem
     foreach ($phoneNumbers as $phoneNumber) {
