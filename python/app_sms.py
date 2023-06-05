@@ -17,18 +17,19 @@ app.config['DEBUG'] = True
 # conn.commit()
 
 # Specify the list of modem ports
-modemPorts = [
-    "COM17",
-    "COM11",
-    "COM13",
-    "COM14",
-    "COM15",
-    "COM17",
-    "COM17",
-    "COM17",
-    "COM25",
+modemPorts = {
+    "COM17": "gammurc",
+    "COM11": "gammurc1",
+    "COM13": "gammurc2",
+    "COM14": "gammurc3",
+    "COM15": "gammurc4",
+    "COM17": "gammurc5",
+    "COM17": "gammurc6",
+    "COM17": "gammurc7",
+    "COM25": "gammurc8",
+    "COM25": "gammurc9",
     # Add the rest of the modem ports here
-]
+}
 
 # Создаем локальное хранилище для каждого потока
 #local_storage = threading.local()
@@ -65,7 +66,7 @@ def send_sms():
         # Array to store delivery results
         # delivery_results = []
         random_modem_port = random.choice(modemPorts)
-
+        key_com = [key for key, value in modemPorts.items() if value == random_modem_port]        
             # Send SMS to each phone number using each modem
         response = send_sms_command(random_modem_port, phone_numbers, message)
             # delivery_results.append({
@@ -76,7 +77,7 @@ def send_sms():
 
             # Insert message log into the database
         if response == "SMS sent successfully":
-            save_message(random_modem_port, phone_numbers, message, modem_statuses)
+            save_message(key_com, phone_numbers, message, modem_statuses)
 
             # Render the template and pass the delivery_results
             # return render_template('index.html',messages=get_data, delivery_results="", balance="", response=response)
@@ -95,7 +96,30 @@ def save_message(modem_port, phone_number, message, status):
 
 def send_sms_command(modem_port, phone_numbers, message):
     # Run the Gammu command to send SMS using the specified modem
-    command = f"C:\\Gammu\\bin\\gammu -c ./gammurc sendsms TEXT {phone_numbers} -text {message}"
+    command = f"C:\\Gammu\\bin\\gammu -c {gammurc} sendsms TEXT {phone_numbers} -text {message}"
+    # match modem_port:
+    #     case "COM17":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM11":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM12":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM12":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM13":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM14":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM15":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM16":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM18":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM19":
+    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
+    #     case "COM20":
+            
     try:
         output = subprocess.check_output(command, shell=True)
         return "SMS sent successfully"
