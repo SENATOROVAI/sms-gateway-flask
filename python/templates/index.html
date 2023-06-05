@@ -25,7 +25,7 @@
 
     <form id="sms-form" method="POST" action="/">
         <label>Enter recipient phone numbers (one number per line):</label><br>
-        <input name="phone_numbers" rows="4" cols="50" value="+998903256800"><br><br>
+        <textarea name="phone_numbers" rows="4" cols="50" value=""></textarea><br><br>
 
         <label>Enter message:</label><br>
         <input name="message" rows="4" cols="50" value="test"><br><br>
@@ -47,10 +47,10 @@
       {% for message in get_data %}
       <tr>
         <td>{{ message[0] }}</td>
-        <td>{{ message[1] }}</td>
+        <td>{{ message[4] }}</td>
         <td>{{ message[2] }}</td>
         <td>{{ message[3] }}</td>
-        <td>{{ message[4] }}</td>
+        <td>{{ message[1] }}</td>
       </tr>
       {% endfor %}
     </tbody>

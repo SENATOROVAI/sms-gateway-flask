@@ -50,10 +50,12 @@ def get_db_connection():
 def send_sms():
     get_data = get_all_data()
     modem_statuses = check_modem_status_command()
-    phone_numbers = request.form.get('phone_numbers', '').strip()
+    phone_numbers = "+998903256800 +998998766801"
+    # phone_numbers = request.form.get('phone_numbers')
+
     message = request.form.get('message', '')
     response = ""
-    if request.method == 'POST' and phone_numbers and message:
+    if request.method == 'POST' and phone_numbers and message:          
         # Check modem status
         # modem_statuses = {}
         #for modem_port in modemPorts:
@@ -65,10 +67,19 @@ def send_sms():
         balance = ""
         # Array to store delivery results
         # delivery_results = []
-        random_modem_port = random.choice(modemPorts)
-        key_com = [key for key, value in modemPorts.items() if value == random_modem_port]        
+        random_modem_port = random.choice(list(modemPorts))
+        random_modem_port = modemPorts[random_modem_port]
+
+        # key_com = [key for key, value in modemPorts.items() if value == random_modem_port]        
             # Send SMS to each phone number using each modem
-        response = send_sms_command(random_modem_port, phone_numbers, message)
+        
+        list_number = []
+        
+        for phone_numbers in phone_numbers.split():
+            response = send_sms_command(random_modem_port, phone_numbers, message)
+            list_number.append(response)
+        return list_number    
+        # response = send_sms_command(random_modem_port, phone_numbers, message)
             # delivery_results.append({
             #     'phone_number': phone_numbers,
             #     'modem_port': random_modem_port,
@@ -76,8 +87,8 @@ def send_sms():
             # })
 
             # Insert message log into the database
-        if response == "SMS sent successfully":
-            save_message(key_com, phone_numbers, message, modem_statuses)
+        
+        save_message(imei, phone_numbers, message, modem_statuses)
 
             # Render the template and pass the delivery_results
             # return render_template('index.html',messages=get_data, delivery_results="", balance="", response=response)
@@ -90,41 +101,20 @@ def save_message(modem_port, phone_number, message, status):
     # Save message to the database
     conn = get_db_connection()
     cursor = conn.cursor()
-    sql = "INSERT INTO messages (modem_port, phone_number, message, status) VALUES (?, ?, ?, ?)"
+    sql = "INSERT INTO messages (imei, phone_number, message, status) VALUES (?, ?, ?, ?)"
     cursor.execute(sql, (modem_port, phone_number, message, status))
     conn.commit()
 
-def send_sms_command(modem_port, phone_numbers, message):
+def send_sms_command(gammurc, phone_numbers, message):
     # Run the Gammu command to send SMS using the specified modem
-    command = f"C:\\Gammu\\bin\\gammu -c {gammurc} sendsms TEXT {phone_numbers} -text {message}"
-    # match modem_port:
-    #     case "COM17":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM11":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM12":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM12":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM13":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM14":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM15":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM16":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM18":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM19":
-    #         command = f"C:\\Gammu\\bin\\gammu -c gammurc sendsms TEXT {phone_numbers} -text {message}"
-    #     case "COM20":
-            
+    command = f'C:\\Gammu\\bin\\gammu -c {gammurc} sendsms TEXT {phone_numbers} -text "{message}"'
+      
     try:
         output = subprocess.check_output(command, shell=True)
-        return "SMS sent successfully"
+        
+        return "Successfully"
     except subprocess.CalledProcessError as e:
-        return f"Failed to send SMS."
+        return f"Failed"
                # f" {e.output.decode('utf-8').strip()}"
 
 def check_modem_status_command():
