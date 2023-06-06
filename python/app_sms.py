@@ -5,7 +5,7 @@ import random
 import mysql.connector
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
 
 # # Создаем таблицу 'messages', если она не существует
