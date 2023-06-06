@@ -8,11 +8,10 @@
 </head>
 <body>
     <h1>Send SMS</h1>
-    <h1>status: {{modem_statuses}}</h1>
+   
     <table>
         <tr>
-            <th>Modem Port</th>
-            <th>Status</th>
+         
         </tr>
         {% for modemPort in modemPorts %}
             <tr>
@@ -24,15 +23,22 @@
     <h1>{{phone_numbers}}</h1>
 
     <form id="sms-form" method="POST" action="/">
-        <label>Enter recipient phone numbers (one number per line):</label><br>
+        <label>Enter number:</label><br>
         <textarea name="phone_numbers" rows="4" cols="50" value=""></textarea><br><br>
 
         <label>Enter message:</label><br>
-        <input name="message" rows="4" cols="50" value="test"><br><br>
+        <input name="message" rows="4" cols="50" value=""><br><br>
         <input type="submit" value="Send">
     </form>
-<div id="result"></div>
-    <h1>{{response}}</h1>
+
+    <form id="delTable" method="POST" action="/delete">
+        <input type="submit" value="удалить таблицу">
+    </form>
+
+  
+    <h1 id="result">{{delete_button}}</h1>
+
+
 <table>
     <thead>
       <tr>
@@ -47,10 +53,10 @@
       {% for message in get_data %}
       <tr>
         <td>{{ message[0] }}</td>
-        <td>{{ message[4] }}</td>
+        <td>{{ message[1] }}</td>
         <td>{{ message[2] }}</td>
         <td>{{ message[3] }}</td>
-        <td>{{ message[1] }}</td>
+        <td>{{ message[4] }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -69,9 +75,33 @@
                     url: '/',
                     type: 'POST',
                     data: formData,
-                    success: function(response) {
+                    success: function(data) {
                         // Обработка успешного ответа сервера
-                        $('body').html(response);
+                        console.log(data)
+                        $("body").html(data);
+                    },
+                    error: function(error) {
+                        // Обработка ошибки
+                        console.log(error);
+                    }
+                });
+            });
+
+            $('#delTable').submit(function(event) {
+                event.preventDefault(); // Предотвращение отправки формы по умолчанию
+
+                // Получение данных формы
+
+                // Отправка AJAX-запроса
+                $.ajax({
+                    url: '/delete',
+                    type: 'POST',
+             
+                    success: function(response) {
+                        var resultText = $(response).find("#result");
+                        if (result) $("#result").text("Таблица успешно удалена");
+                        $("table").remove()
+                       
                     },
                     error: function(error) {
                         // Обработка ошибки
@@ -82,4 +112,63 @@
         });
     </script>
 </body>
+
+<style>
+    table {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        background: #b2ff00;
+    }
+   tbody, thead {
+        width: 100%;
+    }
+    body > table:nth-child(8) > thead > tr, tbody>tr {
+        width: 100%;
+        display: block;
+    }
+    thead th, tbody td {
+        width: 200px;
+        text-align:center;
+    }
+    tbody {
+        max-height: 69vh;
+        overflow-y: auto;
+    }
+    h1 {
+        text-align: center;
+    }
+    input[type="submit"] {
+        background: #adb5bd;
+    }
+    body {
+        background: #d8d8d8;
+        overflow: hidden;
+    }
+
+    body > table:nth-child(8) > thead > tr, tbody>tr {
+    display: flex;
+    justify-content: center;
+    }
+    body > table:nth-child(8) > thead > tr, tbody>tr {
+        border-bottom: 1px solid;
+    }
+    form#sms-form {
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    #sms-form > textarea {
+        width: 200px;
+    }
+    #sms-form > input:nth-child(8) {
+        width: 300px;
+    }
+    body > table:nth-child(7) > thead > tr {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+</style>
 </html>

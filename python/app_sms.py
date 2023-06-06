@@ -4,7 +4,6 @@ import subprocess
 import random
 import mysql.connector
 
-
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -33,25 +32,46 @@ modemPorts = {
 
 # Создаем локальное хранилище для каждого потока
 #local_storage = threading.local()
-
-# Функция для получения соединения с базой данных
 def get_db_connection():
-    # Создаем соединение с базой данных
-    with sqlite3.connect('database.db') as conn:
-        return conn
-
-
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password=None,
+            database="smsgate"
+        )
+        return connection
+    except:
+        return "fail connect to db"
+      
 # if not hasattr(local_storage, 'connection'):
         # Создаем новое соединение для каждого потока
     #    local_storage.connection = sqlite3.connect('database.db')
     #return local_storage.connection
 
+@app.route('/repeat', methods=['GET', 'POST'])
+def repaet_send_sms():
+    return "repaet"
+
+@app.route('/delete', methods=['GET', 'POST'])
+def delete_send_sms():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    sql = "DELETE FROM logs;"
+    cursor.execute(sql)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    delete_button  = "Таблица успешно удалена"
+    return render_template('index.html', delete_button=delete_button)
+
 @app.route('/', methods=['GET', 'POST'])
 def send_sms():
+
     get_data = get_all_data()
-    modem_statuses = check_modem_status_command()
-    phone_numbers = "+998903256800 +998998766801"
-    # phone_numbers = request.form.get('phone_numbers')
+    # modem_statuses = check_modem_status_command()
+    # phone_numbers = "+998903256800 +998998766800"
+    phone_numbers = request.form.get('phone_numbers','')
 
     message = request.form.get('message', '')
     response = ""
@@ -67,18 +87,22 @@ def send_sms():
         balance = ""
         # Array to store delivery results
         # delivery_results = []
-        random_modem_port = random.choice(list(modemPorts))
-        random_modem_port = modemPorts[random_modem_port]
+        # get_key_random_modem_port = random.choice(list(modemPorts))
+        # get_val_random_modem_port = modemPorts[get_key_random_modem_port]
 
+        
         # key_com = [key for key, value in modemPorts.items() if value == random_modem_port]        
             # Send SMS to each phone number using each modem
         
-        list_number = []
+        # list_number = []
         
         for phone_numbers in phone_numbers.split():
-            response = send_sms_command(random_modem_port, phone_numbers, message)
-            list_number.append(response)
-        return list_number    
+            get_key_random_modem_port = random.choice(list(modemPorts))
+            get_val_random_modem_port = modemPorts[get_key_random_modem_port]
+            response = send_sms_command(get_val_random_modem_port, phone_numbers, message)
+            # list_number.append(response)
+            save_message(get_key_random_modem_port, phone_numbers, message, response)
+            
         # response = send_sms_command(random_modem_port, phone_numbers, message)
             # delivery_results.append({
             #     'phone_number': phone_numbers,
@@ -88,7 +112,7 @@ def send_sms():
 
             # Insert message log into the database
         
-        save_message(imei, phone_numbers, message, modem_statuses)
+        
 
             # Render the template and pass the delivery_results
             # return render_template('index.html',messages=get_data, delivery_results="", balance="", response=response)
@@ -97,45 +121,51 @@ def send_sms():
     # Render the initial form
     return render_template('index.html',get_data=get_data, response=response)
 
-def save_message(modem_port, phone_number, message, status):
+def save_message(get_key_random_modem_port,phone_number, message, status):
     # Save message to the database
     conn = get_db_connection()
+    # get_imei = check_modem_status_command()
     cursor = conn.cursor()
-    sql = "INSERT INTO messages (imei, phone_number, message, status) VALUES (?, ?, ?, ?)"
-    cursor.execute(sql, (modem_port, phone_number, message, status))
+    sql = "INSERT INTO `logs` (`id`, `imei`, `number`, `sms`, `status`) VALUES (NULL, %s, %s, %s, %s);"
+    cursor.execute(sql, (get_key_random_modem_port, phone_number, message, status))
     conn.commit()
+    cursor.close()
+    conn.close()
+    
 
 def send_sms_command(gammurc, phone_numbers, message):
     # Run the Gammu command to send SMS using the specified modem
-    command = f'C:\\Gammu\\bin\\gammu -c {gammurc} sendsms TEXT {phone_numbers} -text "{message}"'
-      
+    command = f'C:\\Gammu\\bin\\gammu -c C:\\Gammu\\bin\\{gammurc} sendsms TEXT {phone_numbers} -text "{message}"'
+    # return command
     try:
         output = subprocess.check_output(command, shell=True)
-        
-        return "Successfully"
+    
+        return 1
     except subprocess.CalledProcessError as e:
-        return f"Failed"
-               # f" {e.output.decode('utf-8').strip()}"
+        return f" {e.output.decode('utf-8').strip()}"
 
-def check_modem_status_command():
-    command = r"C:\Gammu\bin\gammu --identify"
-    try:
-        output = subprocess.run(command, shell=True, capture_output=True, text=True)
-        if output.returncode == 0:
-            lines = output.stdout.strip().split('\n')
-            imei_line = next((line for line in lines if 'IMEI' in line), None)
-            if imei_line:
-                imei = imei_line.split(':', 1)[1].strip()
-                return imei
-        else:
-            return None
-    except subprocess.CalledProcessError as e:
-        return None
+def check_modem_status_command(gammurc):
+    pass
+    # imei = {gammurc}
+    
+    # command = r"C:\Gammu\bin\gammu --identify"
+    # try:
+    #     output = subprocess.run(command, shell=True, capture_output=True, text=True)
+    #     if output.returncode == 0:
+    #         lines = output.stdout.strip().split('\n')
+    #         imei_line = next((line for line in lines if 'IMEI' in line), None)
+    #         if imei_line:
+    #             imei = imei_line.split(':', 1)[1].strip()
+    #             return imei
+    #     else:
+    #         return "imei Erorr, code 0"
+    # except subprocess.CalledProcessError as e:
+    #     return "Erorr C:\Gammu\bin\gammu --identify"
 
 def get_all_data():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM `messages`')
+    cursor.execute('SELECT * FROM `logs`')
     rows = cursor.fetchall()
     return rows
 # def check_balance_command():
