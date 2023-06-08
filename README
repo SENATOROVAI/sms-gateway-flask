@@ -9,3 +9,5 @@ Open command line in current directory (directory of this file), and paste comma
 Open command line in current directory (directory of this file), and paste command:
     cd app
     python .\views.py
+
+edit .env to correct values
