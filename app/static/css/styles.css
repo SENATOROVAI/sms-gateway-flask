@@ -1,0 +1,56 @@
+table {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    background: #b2ff00;
+}
+tbody, thead {
+    width: 100%;
+}
+body > table:nth-child(8) > thead > tr, tbody>tr {
+    width: 100%;
+    display: block;
+}
+thead th, tbody td {
+    width: 200px;
+    text-align:center;
+}
+tbody {
+    max-height: 69vh;
+    overflow-y: auto;
+}
+h1 {
+    text-align: center;
+}
+input[type="submit"] {
+    background: #adb5bd;
+}
+body {
+    background: #d8d8d8;
+    overflow: hidden;
+}
+
+body > table:nth-child(8) > thead > tr, tbody>tr {
+display: flex;
+justify-content: center;
+}
+body > table:nth-child(8) > thead > tr, tbody>tr {
+    border-bottom: 1px solid;
+}
+form#sms-form {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+#sms-form > textarea {
+    width: 200px;
+}
+#sms-form > input:nth-child(8) {
+    width: 300px;
+}
+body > table:nth-child(7) > thead > tr {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,7 @@
+************ CONFIGURATION ***************
+Open command line in current directory (directory of this file), and paste command:
+    python -m pip install -r requirements.txt
+
+************ USAGE ***************
+Open command line in current directory (directory of this file), and paste command:
+    python run_app.py
