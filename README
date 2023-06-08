@@ -4,4 +4,5 @@ Open command line in current directory (directory of this file), and paste comma
 
 ************ USAGE ***************
 Open command line in current directory (directory of this file), and paste command:
-    python run_app.py
+    cd app
+    python .\views.py
