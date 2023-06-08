@@ -12,4 +12,4 @@ Open command line in current directory (directory of this file), and paste comma
     cd app
     python .\views.py
 
-#enjoy!
+## enjoy!
