@@ -7,7 +7,9 @@ Open command line in current directory (directory of this file), and paste comma
 
 ************ USAGE ***************
 Open command line in current directory (directory of this file), and paste command:
+    edit .env to correct values
+    import logs.sql in mysql
     cd app
     python .\views.py
 
-edit .env to correct values
+#enjoy!
