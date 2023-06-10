@@ -8,10 +8,10 @@ load_dotenv()
 class Database:
     def __init__(self):
         self.connection = mysql.connector.connect(
-            host=os.getenv('DATABASE_HOST'),
-            user=os.getenv('DATABASE_USER'),
-            password=os.getenv('DATABASE_PASSWORD'),
-            database=os.getenv('DATABASE_NAME')
+            host=os.getenv("DATABASE_HOST"),
+            user=os.getenv("DATABASE_USER"),
+            password=os.getenv("DATABASE_PASSWORD"),
+            database=os.getenv("DATABASE_NAME"),
         )
 
     def execute_query(self, query, params=None):
@@ -42,7 +42,7 @@ class MessageLogModel:
     def get_data():
         db = Database()
         query = "SELECT * FROM logs;"
-        return db.execute_query(query) 
+        return db.execute_query(query)
 
     @staticmethod
     def delete_messages():
