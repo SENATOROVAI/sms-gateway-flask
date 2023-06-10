@@ -1,35 +1,35 @@
 from flask import Flask
 from controllers.controller import SMSController
 
-app = Flask(__name__)
-controller = SMSController()
+app: Flask = Flask(__name__)
+controller: SMSController = SMSController()
 
 
 @app.route("/repeat", methods=["GET", "POST"])
-def repeat_send_sms():
+def repeat_send_sms() -> str:
     return "repeat"
 
 
 @app.route("/delete", methods=["GET", "POST"])
-def delete_send_sms():
+def delete_send_sms() -> str:
     return controller.delete_send_sms()
 
 
 @app.route("/send", methods=["GET", "POST"])
-def send_sms():
+def send_sms() -> str:
     return controller.send_sms()
 
 
 @app.route("/", methods=["GET", "POST"])
-def main():
+def main() -> str:
     return controller.get_data()
 
 
 @app.route("/get", methods=["GET", "POST"])
-def get_db():
+def get_db() -> str:
     return controller.download_csv()
 
 
 match __name__:
-    case "__main__":
+    case "main":
         app.run(debug=True)
