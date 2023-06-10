@@ -1,8 +1,5 @@
 import subprocess
 
-# import random
-from itertools import cycle
-
 from flask import render_template, request, Response
 from models.model import MessageLogModel
 
