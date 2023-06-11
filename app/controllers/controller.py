@@ -11,16 +11,16 @@ class SMSController:
     def __init__(self) -> None:
         self.message_log_model: MessageLogModel = MessageLogModel()
 
-    def send_sms_command(self, gammurc:str, phone_number:str, message:str) -> str:
-        command:str = f'C:\\Gammu\\bin\\gammu -c C:\\Gammu\\bin\\{gammurc} sendsms TEXT {phone_number} -text "{message}"'
+    def send_sms_command(self, gammurc: str, phone_number: str, message: str) -> str:
+        command: str = f'C:\\Gammu\\bin\\gammu -c C:\\Gammu\\bin\\{gammurc} sendsms TEXT {phone_number} -text "{message}"'
         try:
             subprocess.check_output(command, shell=True)
             return 1
         except subprocess.CalledProcessError as e:
             return f" {e.output.decode('utf-8').strip()}"
 
-    def get_random_modem_port(self)->dict:
-        modem_ports:dict = {
+    def get_random_modem_port(self) -> dict:
+        modem_ports: dict = {
             "COM17": "gammurc",
             "COM11": "gammurc1",
             "COM13": "gammurc2",
@@ -34,7 +34,7 @@ class SMSController:
         }
         return modem_ports
 
-    def send_sms(self)->list:
+    def send_sms(self) -> list:
         list_num: list = []
         numbers: list = [
             11231,
@@ -96,7 +96,7 @@ class SMSController:
         get_data = self.message_log_model.get_data()
         return render_template("index.html", get_data=get_data)
 
-    def download_csv(self)->Response:
+    def download_csv(self) -> Response:
         result = self.message_log_model.get_data()
 
         fieldnames: list = ["id", "imei", "number", "sms", "status"]
@@ -114,7 +114,7 @@ class SMSController:
 
         return response
 
-    def delete_send_sms(self)->str:
+    def delete_send_sms(self) -> str:
         self.message_log_model.delete_messages()
         delete_button: str = "Таблица успешно удалена"
         return render_template("index.html", delete_button=delete_button)

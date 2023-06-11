@@ -1,5 +1,7 @@
 from app import app
+from .controllers.controller import SMSController
 
+controller: SMSController = SMSController()
 
 
 @app.route("/repeat", methods=["GET", "POST"])
@@ -25,5 +27,3 @@ def main() -> str:
 @app.route("/get", methods=["GET", "POST"])
 def get_db() -> str:
     return controller.download_csv()
-
-
