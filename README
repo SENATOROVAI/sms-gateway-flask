@@ -39,3 +39,14 @@ cursor.execute(query)
 # Commit the changes and close the connection
 connection.commit()
 connection.close()
+
+
+
+model.py
+
+     self.connection = mysql.connector.connect(
+            host=os.getenv("DATABASE_HOST"),
+            user=os.getenv("DATABASE_USER"),
+            password=os.getenv("DATABASE_PASSWORD"),
+            database=os.getenv("DATABASE_NAME"),
+        )
