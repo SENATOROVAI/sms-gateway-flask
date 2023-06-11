@@ -15,7 +15,7 @@ Open command line in current directory (directory of this file), and paste comma
 ### enjoy!
 
 
-
+##############################################################################
 HELP to create random DB
 
 DATABASE_FILE = "sms.db"  # Replace with your desired database filename
