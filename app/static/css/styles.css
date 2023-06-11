@@ -41,6 +41,7 @@ form#sms-form {
     justify-content: center;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 #sms-form > textarea {
     width: 200px;
@@ -53,4 +54,14 @@ body > table:nth-child(7) > thead > tr {
     text-align: center;
     display: flex;
     justify-content: center;
+}
+
+.wrapper__button {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+
+form#delTable:first-child {
+    margin-bottom: 50px;
 }

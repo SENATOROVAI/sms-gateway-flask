@@ -8,7 +8,6 @@ load_dotenv()
 
 class Database:
     def __init__(self) -> None:
-        print(os.getenv("DATABASE_FILE"))
         self.connection = sqlite3.connect(os.getenv("DATABASE_FILE"))
 
     def execute_query(
