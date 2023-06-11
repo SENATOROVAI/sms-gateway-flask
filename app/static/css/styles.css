@@ -1,4 +1,4 @@
-table {
+/* table {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -64,4 +64,4 @@ body > table:nth-child(7) > thead > tr {
 
 form#delTable:first-child {
     margin-bottom: 50px;
-}
+} */
