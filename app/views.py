@@ -1,8 +1,5 @@
-from flask import Flask
-from controllers.controller import SMSController
+from app import app
 
-app: Flask = Flask(__name__)
-controller: SMSController = SMSController()
 
 
 @app.route("/repeat", methods=["GET", "POST"])
@@ -30,6 +27,3 @@ def get_db() -> str:
     return controller.download_csv()
 
 
-match __name__:
-    case "main":
-        app.run(debug=True)

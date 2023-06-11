@@ -1,7 +1,7 @@
 import subprocess
 
 from flask import render_template, request, Response
-from models.model import MessageLogModel
+from app.models.model import MessageLogModel
 
 import csv
 from io import StringIO
@@ -11,7 +11,7 @@ class SMSController:
     def __init__(self) -> None:
         self.message_log_model: MessageLogModel = MessageLogModel()
 
-    def send_sms_command(self, gammurc:srt, phone_number:str, message:str)->str:
+    def send_sms_command(self, gammurc:str, phone_number:str, message:str) -> str:
         command:str = f'C:\\Gammu\\bin\\gammu -c C:\\Gammu\\bin\\{gammurc} sendsms TEXT {phone_number} -text "{message}"'
         try:
             subprocess.check_output(command, shell=True)
@@ -92,7 +92,7 @@ class SMSController:
 
         return render_template("index.html", get_data=get_data, response=response)
 
-    def get_data(self)-str:
+    def get_data(self) -> str:
         get_data = self.message_log_model.get_data()
         return render_template("index.html", get_data=get_data)
 
