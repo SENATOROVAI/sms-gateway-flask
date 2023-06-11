@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-import mysql.connector
+import sqlite3
 from typing import Optional, Tuple, List, Dict
 
 load_dotenv()
@@ -8,12 +8,8 @@ load_dotenv()
 
 class Database:
     def __init__(self) -> None:
-        self.connection = mysql.connector.connect(
-            host=os.getenv("DATABASE_HOST"),
-            user=os.getenv("DATABASE_USER"),
-            password=os.getenv("DATABASE_PASSWORD"),
-            database=os.getenv("DATABASE_NAME"),
-        )
+        print(os.getenv("DATABASE_FILE"))
+        self.connection = sqlite3.connect(os.getenv("DATABASE_FILE"))
 
     def execute_query(
         self, query: str, params: Optional[Tuple] = None
@@ -21,12 +17,14 @@ class Database:
         result: Optional[List[Tuple]] = None
         try:
             connection = self.connection
-            with connection.cursor() as cursor:
+            cursor = connection.cursor()
+            if params is None:
+                cursor.execute(query)
+            else:
                 cursor.execute(query, params)
-                if cursor.with_rows:
-                    result = cursor.fetchall()
+            result = cursor.fetchall()
             connection.commit()
-        except mysql.connector.Error as error:
+        except sqlite3.Error as error:
             print(f"Error executing query: {error}")
         finally:
             if connection:
@@ -40,7 +38,7 @@ class MessageLogModel:
         modem_port: str, phone_number: str, message: str, status: int
     ) -> None:
         db: Database = Database()
-        query: str = "INSERT INTO `logs` (`id`, `imei`, `number`, `sms`, `status`) VALUES (NULL, %s, %s, %s, %s);"
+        query: str = "INSERT INTO logs (id, imei, number, sms, status) VALUES (NULL, ?, ?, ?, ?);"
         db.execute_query(query, (modem_port, phone_number, message, status))
 
     @staticmethod

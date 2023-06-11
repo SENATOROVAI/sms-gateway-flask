@@ -1,6 +1,6 @@
 from app import app
-from .controllers.controller import SMSController
 
+from .controllers.controller import SMSController
 controller: SMSController = SMSController()
 
 

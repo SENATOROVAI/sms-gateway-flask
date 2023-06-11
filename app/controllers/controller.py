@@ -1,7 +1,7 @@
 import subprocess
 
 from flask import render_template, request, Response
-from models.model import MessageLogModel
+from ..models.model import MessageLogModel
 
 import csv
 from io import StringIO
