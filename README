@@ -13,3 +13,29 @@ Open command line in current directory (directory of this file), and paste comma
     python .\views.py
 
 ### enjoy!
+
+
+
+HELP to create random DB
+
+DATABASE_FILE = "sms.db"  # Replace with your desired database filename
+
+# Create the database connection
+connection = sqlite3.connect(DATABASE_FILE)
+cursor = connection.cursor()
+
+# Create the 'logs' table
+query = """
+    CREATE TABLE IF NOT EXISTS logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        imei TEXT,
+        number TEXT,
+        sms TEXT,
+        status INTEGER
+    );
+"""
+cursor.execute(query)
+
+# Commit the changes and close the connection
+connection.commit()
+connection.close()
