@@ -3,15 +3,14 @@
 
 ************ CONFIGURATION ***************
 Open command line in current directory (directory of this file), and paste command:
+    python -m venv venv
+    .\venv\Sc + tab \acti + tab  ENTER
+
     python -m pip install -r requirements.txt
 
 ************ USAGE ***************
 Open command line in current directory (directory of this file), and paste command:
-    edit .env to correct values
-    import logs.sql in mysql
-    cd app
-    python .\views.py
-
+    python .\run.py
 ### enjoy!
 
 ##############################################################################
