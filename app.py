@@ -70,7 +70,7 @@ def send_sms():
 
     get_data = get_all_data()
     # modem_statuses = check_modem_status_command()
-    # phone_numbers = "+998903256800 +998998766800"
+
     phone_numbers = request.form.get('phone_numbers','')
 
     message = request.form.get('message', '')
