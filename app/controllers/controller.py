@@ -74,7 +74,7 @@ class SMSController:
                                 "modem_port": modem_port,
                                 "phone_number": phone_number,
                                 "message": message,
-                                "response": future.result(),
+                                "response": future,
                             }
                         )
 
@@ -83,6 +83,7 @@ class SMSController:
             phone_number = data["phone_number"]
             message = data["message"]
             response = data["response"]
+            response = future.result()
             self.message_log_model.save_message(
                 modem_port, phone_number, message, response
             )
