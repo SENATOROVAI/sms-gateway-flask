@@ -7,9 +7,6 @@ from ..models.model import MessageLogModel
 
 import csv
 from io import StringIO
-
-import asyncio
-
 import concurrent.futures
 
 # from asyncio import run
